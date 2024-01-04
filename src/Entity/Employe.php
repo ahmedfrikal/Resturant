@@ -28,7 +28,7 @@ class Employe
     private ?string $role = null;
 
     #[ORM\OneToMany(mappedBy: 'employe', targetEntity: Commande::class)]
-    private Collection $commandes;
+    private ?Collection $commandes;
 
     public function __construct()
     {

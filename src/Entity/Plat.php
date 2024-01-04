@@ -37,6 +37,9 @@ class Plat
     #[ORM\OneToMany(mappedBy: 'plat', targetEntity: Commande::class)]
     private Collection $commandes;
 
+    #[ORM\Column(length: 30)]
+    private ?string $image = null;
+
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
@@ -152,6 +155,18 @@ class Plat
                 $commande->setPlat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

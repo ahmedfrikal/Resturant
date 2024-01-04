@@ -15,7 +15,7 @@ class Commande
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
-    private ?plat $plat = null;
+    private ?Plat $plat = null;
 
     #[ORM\ManyToOne(inversedBy: 'commandes')]
     private ?Employe $employe = null;
