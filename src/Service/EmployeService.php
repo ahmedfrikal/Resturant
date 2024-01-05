@@ -43,4 +43,12 @@ class EmployeService
         $entityManager->remove($employe);
         $entityManager->flush();
     }
+    public function addEmployeFromRequest($requestData): Employe
+    {
+        $employe = $this->serializer->deserialize($requestData, Employe::class, 'json');
+        $this->entityManager->persist($employe);
+        $this->entityManager->flush();
+
+        return $employe;
+    }
 }

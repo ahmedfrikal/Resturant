@@ -56,6 +56,21 @@ class EmployeController extends AbstractController
         return new JsonResponse(['message' => 'L\'employé a été supprimé avec succès.'], Response::HTTP_ACCEPTED);
     }
 
+    #[Route('/employe', name: 'AddEmploye', methods: ['POST'])]
+    public function add(Request $request): JsonResponse
+    {
+        $employeData = $request->getContent();
+        $employe = $this->employeService->addEmployeFromRequest($employeData);
+        $imageExtension = pathinfo($employe->getImage(), PATHINFO_EXTENSION);
+
+        if (!in_array(strtolower($imageExtension), ['pdf', 'jpg'])) {
+            return new JsonResponse(status: Response::HTTP_BAD_REQUEST);
+        }
+        $jsonEmploye = $this->serializer->serialize($employe, 'json');
+
+        return new JsonResponse($jsonEmploye, Response::HTTP_CREATED, [], true);
+    }
+
 
 
  }
