@@ -8,15 +8,18 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: PlatRepository::class)]
 class Plat
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
+
     private ?string $nom = null;
 
     #[ORM\Column(length: 20)]
@@ -34,11 +37,14 @@ class Plat
     #[ORM\Column]
     private ?int $tempsPreparation = null;
 
-    #[ORM\OneToMany(mappedBy: 'plat', targetEntity: Commande::class)]
-    private Collection $commandes;
-
     #[ORM\Column(length: 30)]
     private ?string $image = null;
+
+    #[ORM\ManyToOne(inversedBy: 'plats')]
+    private ?Commande $commande = null;
+
+    #[ORM\OneToMany(mappedBy: 'plat', targetEntity: Commande::class)]
+    private Collection $commandes;
 
     public function __construct()
     {
@@ -129,6 +135,30 @@ class Plat
         return $this;
     }
 
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getCommande(): ?Commande
+    {
+        return $this->commande;
+    }
+
+    public function setCommande(?Commande $commande): static
+    {
+        $this->commande = $commande;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Commande>
      */
@@ -155,18 +185,6 @@ class Plat
                 $commande->setPlat(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): static
-    {
-        $this->image = $image;
 
         return $this;
     }

@@ -7,14 +7,21 @@ use App\Entity\Employe;
 use App\Mapper\EmployeMapper;
 use App\Repository\EmployeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class EmployeService
 {
     private EmployeRepository $employeRepository;
 
-    public function __construct(EmployeRepository $employeRepository)
+    private SerializerInterface $serializer;
+
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EmployeRepository $employeRepository,SerializerInterface $serializer,EntityManagerInterface $entityManager)
     {
         $this->employeRepository=$employeRepository;
+        $this->serializer=$serializer;
+        $this->entityManager=$entityManager;
     }
 
     public function FindAll():array{
@@ -37,18 +44,17 @@ class EmployeService
         return $this->employeRepository->find($id);
     }
 
-    public function delete(int $id, EntityManagerInterface $entityManager): void
+    public function delete(int $id): void
     {
         $employe = $this->getEmploye($id);
-        $entityManager->remove($employe);
-        $entityManager->flush();
+        $this->entityManager->remove($employe);
+        $this->entityManager->flush();
     }
     public function addEmployeFromRequest($requestData): Employe
     {
         $employe = $this->serializer->deserialize($requestData, Employe::class, 'json');
         $this->entityManager->persist($employe);
         $this->entityManager->flush();
-
         return $employe;
     }
 }

@@ -2,12 +2,11 @@
 
 namespace App\Controller;
 
-use App\Mapper\EmployeMapper;
 use App\Service\EmployeService;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -29,6 +28,7 @@ class EmployeController extends AbstractController
     {
         try {
             $employes=$this->employeService->FindAll();
+
             $jsonEmployes=$this->serializer->serialize($employes,'json');
             return new JsonResponse($jsonEmployes,Response::HTTP_OK,[],true);
         }
@@ -49,10 +49,9 @@ class EmployeController extends AbstractController
             }
     }
     #[Route('/employe/{id}', name: 'DeleteEmployes', methods: ['DELETE'])]
-    public function delete(int $id, EntityManagerInterface $entityManager): JsonResponse
+    public function delete(int $id): JsonResponse
     {
-        $this->employeService->delete($id, $entityManager);
-
+        $this->employeService->delete($id);
         return new JsonResponse(['message' => 'L\'employé a été supprimé avec succès.'], Response::HTTP_ACCEPTED);
     }
 
@@ -62,7 +61,6 @@ class EmployeController extends AbstractController
         $employeData = $request->getContent();
         $employe = $this->employeService->addEmployeFromRequest($employeData);
         $imageExtension = pathinfo($employe->getImage(), PATHINFO_EXTENSION);
-
         if (!in_array(strtolower($imageExtension), ['pdf', 'jpg'])) {
             return new JsonResponse(status: Response::HTTP_BAD_REQUEST);
         }
