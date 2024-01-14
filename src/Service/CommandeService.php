@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTO\ChiffreAffairesParMoisDTO;
 use App\DTO\CommandeDto;
 use App\Entity\Commande;
 use App\Mapper\CommandeMapper;
@@ -41,6 +42,20 @@ class CommandeService
     public function createCommande(Commande $commande){
         $this->entityManager->persist($commande);
         $this->entityManager->flush();
+    }
+    public function chiffreAffairesParMois(){
+        $chiffreAffireRepository=$this->commandeRepository->chiffreAffairesParMois();
+
+        $resultats = [];
+        foreach ($chiffreAffireRepository as $resultat)
+        {
+            $resultats[] = new ChiffreAffairesParMoisDTO(
+                $resultat['nomEmploye'],
+                $resultat['prenomEmploye'],
+                $resultat['nombreCommandes']
+            );
+        }
+        return $resultats;
     }
 
 

@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\Commande;
 use App\Entity\Employe;
 use App\Entity\Plat;
+use App\Repository\CommandeRepository;
 use App\Service\CommandeService;
 use App\Service\EmployeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,6 +39,18 @@ class CommandeController extends AbstractController
 
         return new JsonResponse($jsonContent, 200, [], true);
     }
+    #[Route('/commande/chiffreAffairesParMois', name: 'commandes', methods: ['GET'])]
+    public function chiffreAffairesParMois()
+    {
+        $resultat=$this->commandeService->chiffreAffairesParMois();
+
+        $jsonContent = $this->serializer->serialize($resultat, 'json');
+
+        return new JsonResponse($jsonContent, 200, [], true);
+    }
+
+
+
 
 
 }

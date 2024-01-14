@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\DTO\ChiffreAffairesParMoisDTO;
 use App\Entity\Commande;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\FetchMode;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +21,15 @@ class CommandeRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Commande::class);
+    }
+    public function chiffreAffairesParMois()
+    {
+         return $this->createQueryBuilder('c')
+            ->select('e.nom AS nomEmploye, e.prenom AS prenomEmploye, COUNT(c.id) AS nombreCommandes')
+            ->join('c.employe', 'e')
+            ->groupBy('e.id')
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**
